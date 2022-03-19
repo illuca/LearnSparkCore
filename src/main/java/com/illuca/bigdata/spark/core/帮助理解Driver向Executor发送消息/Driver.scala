@@ -11,10 +11,23 @@ object Driver {
         val out = client.getOutputStream()
         val objOut = new ObjectOutputStream(out)
         val task = new Task()
-        objOut.writeObject(task)
-        objOut.flush()
-        objOut.close()
-        client.close()
+
+        val subTask1 = new SubTask()
+        subTask1.datas = task.data.take(2)
+        subTask1.logic = task.logic
+        objOut.writeObject(subTask1)
+
+        val client2 = new Socket("localhost", 19999)
+        val out2 = client2.getOutputStream()
+        val objOut2 = new ObjectOutputStream(out2)
+        val subTask2 = new SubTask()
+        subTask2.datas = task.data.takeRight(2)
+        subTask2.logic = task.logic
+        objOut2.writeObject(subTask2)
         println("客户端数据发送完毕.")
+
+        objOut2.flush()
+        objOut2.close()
+        client2.close()
     }
 }
